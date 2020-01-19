@@ -1,0 +1,200 @@
+<style>
+	body {
+	  background-color:#404040;
+	  text-align: center;
+	  color: white;
+	  font-family: Arial;
+	}
+	button {
+		border: none;
+		padding: 15px 32px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 16px;
+	}
+	input{
+		background-color: lightgray; 
+		border: 2px solid black;
+		border-radius: 15px;
+		padding: 10px 15px;
+		opacity: 1;
+		transform: scaleY(1);
+		animation-name: fadeIn;
+		animation-duration: 1s;
+	}
+	button {
+		background-color:#959595;
+		border: none;
+		padding: 15px 32px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 16px;
+		cursor: pointer;
+		box-shadow: 0 9px #747474;
+		border-radius: 15px;
+		animation-name: fadeIn;
+		animation-duration: 1s;
+	}
+	h2{
+		opacity: 1;
+		transform: scaleY(1);
+		transForm: scaleX(1);
+		animation-name: fadeIn;
+		animation-duration: 1s;
+	}
+	div{
+		opacity: 1;
+		animation-name: textFade;
+		animation-duration: 3s;
+	}
+	@keyframes textFade{
+		from{opacity:0;}
+		to{opacity:1;}
+	}
+	input:hover{background-color: white;}
+	button:hover{background-color: #535353;}
+	button:active{
+		background-color: #535353;
+		box-shadow: 0 9px #323232;
+		transform: translateY(4px);
+	}
+	@keyframes fadeIn{
+		from{opacity: 0; transform: scaleY(0); transform: scaleX(0); transform: translateY(-20px)}
+		to{opacity: 1; transform: scaleY(1); transform: scaleX(1); transform:translateY(0px)}
+	}
+</style>
+
+<body>
+
+	<h2>Sign Up Page</h2>
+
+	<p id = "userID"> <div>Username:</div><br>
+		<input type="text" id="id" placeholder="Enter Username">
+	</p>
+	<p>
+		<div>Password:</div><br>
+		<input type="password" id="p1" placeholder="password12"><br>
+	</p>
+	<p>
+		<div>Confirm Password:</div><br>
+		<input type="password" id="p2" placeholder="password12"><br>
+	</p>
+	<p>
+		<div>Add your contact's full name, phone number <br>
+		or mobile number, and email address</div>
+	</p>
+
+	<p>
+		<div>Contact Name:</div><br>
+		<input type="text" id="name" placeholder="eg. Ramon"><br>
+	</p>
+	<p> 
+		<div>Contact Phone:</div><br>
+		 <input type="text" id="phone" placeholder="123-456-7890"><br>
+	</p>
+	<p> 
+		<div>Email Address:</div><br>
+		   <input type="text" id="email" placeholder="hackathon@gmail.com"><br>
+	</p>
+
+	<button onclick="myFunction(); samePass()">Sign Up</button>
+
+	<p id="demo"></p>
+
+	<script>
+	function myFunction() {
+  		var x = document.getElementById("name").value + "<br>" +  			document.getElementById("phone").value + "<br>" +  		         document.getElementById("email").value;
+
+ document.getElementById("demo").innerHTML = x;
+}
+
+
+	function samePass(){
+		var p1 = document.getElementById("p1").value;
+   	 	var p2 = document.getElementById("p2").value;
+   	 	var uName = document.getElementById("id").value;
+  		var cName = document.getElementById("name").value;
+  		var cPhone = document.getElementById("phone").value;
+    	var eAddress = document.getElementById("email").value;
+    	if (isValid(uName,p1,p2,cName, cPhone, eAddress)){
+    		storeInfo();
+  		}else{
+    		document.getElementById("demo").innerHTML = "Missing some information or incorrect inputs";
+    	}
+}
+
+	function storeInfo(){
+		var userName = document.getElementById("id").value;
+   		var passWord = document.getElementById("p1").value;
+    	var contactName = document.getElementById("name").value;
+    	var contactPhone = document.getElementById("phone").value;
+   	 	var emailAddress = document.getElementById("email").value;
+        var dataToSend = {"userid": userName,"password":passWord,"contact name":contactName,"contact phone":contactPhone,
+        "contact email":emailAddress};
+        var JsonData = JSON.stringify( dataToSend );
+        var postClient = new XMLHttpRequest();
+        postClient.open("POST",'http://104.154.69.109/register',true);
+
+        postClient.onload = function () {
+            redirect();
+        };
+        postClient.setRequestHeader('Content-type', 'application/json');
+        postClient.send(JsonData);
+}
+
+	function redirect(){
+		location.replace("index.html");
+}
+
+	function isValid(uName,p1,p2,cName, cPhone, eAddress){
+    	var valid = true;
+   		if(uName.length < 1){
+        	// Username Incorrect
+            var userID = document.getElementById("id");
+            userID.style.color = "red";
+            valid = false;
+    	}
+    
+		if(p1 != p2 || p1.length < 1 || p2.length < 1){
+        	// Incorrect Password
+            var p1Id = document.getElementById("p1");
+            var p2Id = document.getElementById("p2");
+            p1Id.style.color = "red";
+            p2Id.style.color = "red";
+            valid = false;
+    	}
+        
+  		if(cName.length < 1){
+            var cNameID = document.getElementById("name");
+            cNameID.style.color = "red";
+            valid = false;
+    	}
+    
+    	if(phoneInvalid(cPhone)){
+			var cPhoneID = document.getElementById("phone");
+            cPhoneID.style.color = "red";
+            valid = false;
+    	}
+    
+    	if(emailInvalid(eAddress)){
+        	var emailID = document.getElementById("email");
+            emailID.style.color = "red";
+            valid = false;
+    	}
+    	return valid;
+}
+   
+	function phoneInvalid(cPhone){
+		return false;
+}	
+
+	function emailInvalid(eAddress){
+		return !(eAddress.includes("@"));
+}
+
+</script>
+
+</body>
+</html>
